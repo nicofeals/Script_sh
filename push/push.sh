@@ -11,6 +11,18 @@ opt_kind=""
 remote=""
 testsuit=""
 tag=""
+help=""
+help_msg="
+	./push [-r remote_name][-t <continue>=N][--tag <tagname>][-h|--help]\n
+    \n
+    -r        :    also push on 'remote_name'.\n
+    \n
+    -t        :    execute a make check and stop if 'continue' is set to N.\n
+                   continue if 'continue' is set to  Y.\n
+    \n
+    --tag     :    set the tag 'tagname' (for now tagname is optional)\n
+    \n
+	-h        :    display that help"
 
 for arg in $@; do
 	if [[ $arg == "-r" && $remote == "" ]]; then
