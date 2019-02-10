@@ -1,5 +1,13 @@
 #! /bin/sh
 
+function check_opt_r() {
+	if [[ $opt_kind == "-r" ]]; then
+		echo "Fail Usage: $Usage"
+		echo "$arg can follow $opt_kind"
+		exit 3
+	fi
+}
+
 RED="\033[31m"
 GREEN="\033[32m"
 BOLD="\033[1m"
@@ -28,32 +36,37 @@ help=""
 
 for arg in $@; do
 	if [[ $arg == "-h" || $arg == "--help" ]]; then
+		check_opt_r
 		help="$arg"
 
 	elif [[ $arg == "-r" && $remote == "" ]]; then
-		opt_kind="remote"
+		check_opt_r
+		opt_kind="-r"
 
 	elif [[ $arg == "-t" && $testsuit == "" ]]; then
-		opt_kind="testsuit"
+		check_opt_r
+		opt_kind="-t"
 		testsuit="N"
 
 	elif [[ $arg == "--tag" && $tag == "" ]]; then
-		opt_kind="tag"
+		check_opt_r
+		opt_kind="--tag"
 
-	elif [[ $opt_kind == "remote" ]]; then
+	elif [[ $opt_kind == "-r" ]]; then
 		remote="$arg"
 		opt_kind=""
 
-	elif [[ $opt_kind == "testsuit" ]]; then
+	elif [[ $opt_kind == "-t" ]]; then
 		if [ $arg != "N" -a $arg != "Y" ]; then
 			echo "Fail Usage: $Usage" >&2
 			echo "option -t can be followed by Y or N and is set to N by default" >&2
+			exit 3
 		else
 			testsuit=$arg
 		fi
 		opt_kind=""
 
-	elif [[ $opt_kind == "tag" ]]; then
+	elif [[ $opt_kind == "--tag" ]]; then
 		tag="$arg"
 		opt_kind=""
 
