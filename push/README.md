@@ -8,14 +8,14 @@ Then it will push on origin and on an optional remote if needed.
   
     ./push [-r remote_name][-t <continue>=N][--tag <tagname>][-h|--help]
     
-    -r		:	also push on 'remote_name'.
+    -r    :   also push on 'remote_name'.
     
-    -t		:  	execute a make check and stop if 'continue' is set to N.
+    -t    :   execute a make check and stop if 'continue' is set to N.
               		continue if 'continue' is set to  Y
               
-    --tag 	:   	set the tag 'tagname' (for now tagname is optional)
+    --tag :   set the tag 'tagname' (for now tagname is optional)
 
-    -h	 	:	display that help
+    -h    :   display that help
     
 
 ## Config:
