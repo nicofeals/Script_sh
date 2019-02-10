@@ -1,4 +1,5 @@
-#!/bin/sh
+#! /bin/sh
+
 RED="\033[31m"
 GREEN="\033[32m"
 BOLD="\033[1m"
@@ -10,6 +11,7 @@ opt_kind=""
 remote=""
 testsuit=""
 tag=""
+
 for arg in $@; do
 	if [[ $arg == "-r" ]]; then
 		opt_kind="remote"
@@ -22,7 +24,7 @@ for arg in $@; do
 		opt_kind="testsuit"
 
 	elif [[ $opt_kind == "testsuit" ]]; then
-		if [[ $arg != "N" -a $arg != "Y" ]]; then
+		if [ $arg != "N" -a $arg != "Y" ]; then
 			echo "Fail Usage: ./push [-r <remote_name>=epita][-t <continue>=N][tagname]" >&2
 			echo "option -t can be followed by Y or N and is set to N by default" >&2
 		else
@@ -48,30 +50,27 @@ done
 mkdir .__tmp_push__
 make
 make 2> .__tmp_push__/error
+resum=""
 if [[ `cat .__tmp_push__/error` != "" ]]; then
 	echo ""
 	echo "$RED$BOLD$BLINKING!\tMAKE FAILE\t!$NORMAL"
+	exit 1
 else
 	clear
-	echo "$GREEN$BOLD\tCompile OK$NORMAL"
+	resume="$GREEN$BOLD\tCompile OK$NORMAL"
 	if [[ testsuit != "" ]]; then
 		make check 2>.__tmp_push__/error
 		make check
 		if [[ `cat .__tmp_push__/error` != "" ]]; then
-			echo ""
-			echo "$RED$BOLD$BLINKING!\tMAKE CHECK FAIL\t!$NORMAL"
-			if [[ testsuit == "Y" ]]; then
-				testsuit="OK"
-			else
-				testsuit="KO"
-			fi
+			resume="$resume\n$RED$BOLD$BLINKING!\tMAKE CHECK FAIL\t!$NORMAL"
 		else
-			clear
-			echo "$GREEN$BOLD\tmake check OK$NORMAL"
+			resume="$resume\n$GREEN$BOLD\tmake check OK$NORMAL"
 			testsuit="OK"
 		fi	
 	fi
-	if [[ testsuite == "OK" -o testsuit == "" ]]; then
+	if [[ $testsuit == "OK" || $testsuit == "" || $testsuit == "Y" ]]; then
+		clear
+		echo "$resume"
 		git push
 		git push epita
 		if [[ $# -eq 2 ]]; then
@@ -86,3 +85,4 @@ else
 	fi
 fi
 rm -r .__tmp_push__
+exit 0
