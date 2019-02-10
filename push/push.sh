@@ -7,25 +7,30 @@ UNDERLINE="\033[4m"
 BLINKING="\033[5m"
 NORMAL="\033[0m"
 
+Usage="./push [-r remote_name][-t <continue>=N][--tag <tagname>][-h\--help]"
+
 opt_kind=""
 remote=""
 testsuit=""
 tag=""
 help=""
-help_msg="
-	./push [-r remote_name][-t <continue>=N][--tag <tagname>][-h|--help]\n
-    \n
-    -r        :    also push on 'remote_name'.\n
-    \n
-    -t        :    execute a make check and stop if 'continue' is set to N.\n
-                   continue if 'continue' is set to  Y.\n
-    \n
-    --tag     :    set the tag 'tagname' (for now tagname is optional)\n
-    \n
-	-h        :    display that help"
+#help_msg="
+#	$Usage\n
+ #    \n
+ #    -r        :    also push on 'remote_name'.\n
+ #    \n
+ #    -t        :    execute a make check and stop if 'continue' is set to N.\n
+ #                   continue if 'continue' is set to  Y.\n
+ #    \n
+ #    --tag     :    set the tag 'tagname' (for now tagname is optional)\n
+ #    \n
+	# -h        :    display that help"
 
 for arg in $@; do
-	if [[ $arg == "-r" && $remote == "" ]]; then
+	if [[ $arg == "-h" || $arg == "--help" ]]; then
+		help="$arg"
+
+	elif [[ $arg == "-r" && $remote == "" ]]; then
 		opt_kind="remote"
 
 	elif [[ $arg == "-t" && $testsuit == "" ]]; then
@@ -41,7 +46,7 @@ for arg in $@; do
 
 	elif [[ $opt_kind == "testsuit" ]]; then
 		if [ $arg != "N" -a $arg != "Y" ]; then
-			echo "Fail Usage: ./push [-r <remote_name>][-t <continue>=N][--tag <tagname>]" >&2
+			echo "Fail Usage: $Usage" >&2
 			echo "option -t can be followed by Y or N and is set to N by default" >&2
 		else
 			testsuit=$arg
@@ -53,7 +58,7 @@ for arg in $@; do
 		opt_kind=""
 
 	else
-		echo "Fail Usage: ./push [-r remote_name][-t <continue>=N][--tag <tagname>]\n" >&2
+		echo "Fail Usage: $Usage\n" >&2
 		echo "$arg is not an option or is allready set" >&2
 		echo "here are the options allready set:"
 		if [[ $remote != "" ]]; then
@@ -67,9 +72,25 @@ for arg in $@; do
 		if [[ $tag != "" ]]; then
 			echo "--tag : $tag"
 		fi
+		if [[ $help != "" ]]; then
+			echo "$help is set"
+		fi
 		
 	fi
 done
+if [[ $help != "" ]]; then
+	echo "$Usage"
+    echo ""
+    echo "-r        :    also push on 'remote_name'."
+    echo ""
+    echo "-t        :    execute a make check and stop if 'continue' is set to N.\n
+                   continue if 'continue' is set to  Y."
+    echo ""
+    echo "--tag     :    set the tag 'tagname' (for now tagname is optional)."
+    echo ""
+	echo "-h        :    display that help"
+	exit 0
+fi
 mkdir .__tmp_push__
 make
 make 2> .__tmp_push__/error
