@@ -101,7 +101,7 @@ if [[ `cat .__tmp_push__/error` != "" ]]; then
 else
 	clear
 	resume="$GREEN$BOLD\tCompile OK$NORMAL"
-	if [[ testsuit != "" ]]; then
+	if [[ $testsuit != "" ]]; then
 		make check 2>.__tmp_push__/error
 		clear
 		make check
