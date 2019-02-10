@@ -2,29 +2,31 @@
 push will check with a makefile if the project compile well.
 If it does, it will push and tag.
 __BE CAREFULL__, it doen't excute a testsuite and doesn't check if the prog is ok.
-Then it will try to push all on the remote named epita if it exists
+Then it will push on origin and on an optional remote if needed.
 
 ## Usage:
   
-    ./push [tagname]
+    ./push [-r remote_name][-t <continue>=N][--tag <tagname>][-h|--help]
+    
+    -r    :   also push on 'remote_name'.
+    
+    -t    :   execute a make check and stop if 'continue' is set to N.
+              continue if 'continue' is set to  Y
+              
+    --tag :    set the tag 'tagname' (for now tagname is optional)
+    
 
 ## Config:
 Needs a git repo.
 Needs a Makefile.
-Optional: a remote named epita on wich it will push the same things.
 
 ## What next ? *TODO*
-    ./push [-r remote name]  [-t <continue>=N]  [-m <build>=makefile]  [tagname]
-
--r: push also on the remote: *remote name*
-(note than it won't push automaticly on epita)
-
--t: try to run the testsuite from makefile.
-if errors occure and \<continue> is: N it won't push.
-set to Y to force the push.
+    ./push [-r remote name][-t <continue>=N][-m <build>=makefile][--tag <tagname>]
 
 -m: change the build system:
 build system supported:
 - Makefile -> *makefile* (default)
 - CMake -> *cmake*
 - autotools -> *autotools*
+- tpy -> run the *testsuit.py*
+- tsh -> run the *testsuit.sh*
