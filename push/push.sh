@@ -71,9 +71,14 @@ else
 	resume="$GREEN$BOLD\tCompile OK$NORMAL"
 	if [[ testsuit != "" ]]; then
 		make check 2>.__tmp_push__/error
+		clear
 		make check
 		if [[ `cat .__tmp_push__/error` != "" ]]; then
-			resume="$resume\n$RED$BOLD$BLINKING!\tMAKE CHECK FAIL\t!$NORMAL"
+			resume="$resume\n$RED$BOLD$BLINKING!\tMAKE CHECK FAIL \t!$NORMAL"
+			if [[ $testsuit == "N" ]]; then
+				echo "\n$resume"
+				exit 2
+			fi
 		else
 			resume="$resume\n$GREEN$BOLD\tmake check OK$NORMAL"
 			testsuit="OK"
@@ -92,7 +97,7 @@ else
 			git tag "$my_tag"
 		fi
 		git push --tags
-		git push epita
+		git push "$remote" --tags
 	fi
 fi
 rm -r .__tmp_push__
