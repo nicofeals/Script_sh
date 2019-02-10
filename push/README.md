@@ -1,7 +1,10 @@
 # push
 push will check with a makefile if the project compile well.
+
 If it does, it will push and tag.
+
 __BE CAREFULL__, it doen't excute a testsuite and doesn't check if the prog is ok.
+
 Then it will push on origin and on an optional remote if needed.
 
 ## Usage:
@@ -20,12 +23,14 @@ Then it will push on origin and on an optional remote if needed.
 
 ## Config:
 Needs a git repo.
+
 Needs a Makefile.
 
 ## What next ? *TODO*
     ./push [-r remote name][-t <continue>=N][-m <build>=makefile][--tag <tagname>]
 
 -m: change the build system:
+
 build system supported:
 - Makefile -> *makefile* (default)
 - CMake -> *cmake*
