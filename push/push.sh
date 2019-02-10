@@ -53,14 +53,14 @@ for arg in $@; do
 		fi
 		opt_kind=""
 
-	elif [[ opt_kind == "tag" ]]; then
+	elif [[ $opt_kind == "tag" ]]; then
 		tag="$arg"
 		opt_kind=""
 
 	else
 		echo "Fail Usage: $Usage\n" >&2
 		echo "$arg is not an option or is allready set" >&2
-		echo "here are the options allready set:"
+		echo "here are the options used:"
 		if [[ $remote != "" ]]; then
 			echo "-r : $remote"
 		fi
@@ -73,9 +73,9 @@ for arg in $@; do
 			echo "--tag : $tag"
 		fi
 		if [[ $help != "" ]]; then
-			echo "$help is set"
+			echo "$help"
 		fi
-		
+		exit 3
 	fi
 done
 if [[ $help != "" ]]; then
@@ -94,7 +94,6 @@ fi
 mkdir .__tmp_push__
 make
 make 2> .__tmp_push__/error
-resum=""
 if [[ `cat .__tmp_push__/error` != "" ]]; then
 	echo ""
 	echo "$RED$BOLD$BLINKING!\tMAKE FAILE\t!$NORMAL"
@@ -121,16 +120,16 @@ else
 		clear
 		echo "$resume"
 		git push
-		git push "$remote"
-		if [[ $# -eq 2 ]]; then
-			git tag "$1"
-		else
+
+		if [[ $tag == "" ]]; then
 			echo "\n$BOLD$UNDERLINE Tag$NORMAL: "
-			read my_tag
-			git tag "$my_tag"
+			read tag
 		fi
+		git tag "$tag"
 		git push --tags
-		git push "$remote" --tags
+		if [[ $remote != "" ]]; then
+			git push "$remote" --tags	
+		fi
 	fi
 fi
 rm -r .__tmp_push__
