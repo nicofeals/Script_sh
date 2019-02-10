@@ -72,7 +72,7 @@ else
 		clear
 		echo "$resume"
 		git push
-		git push epita
+		git push "$remote"
 		if [[ $# -eq 2 ]]; then
 			git tag "$1"
 		else
