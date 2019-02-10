@@ -6,7 +6,7 @@ Then it will try to push all on the remote named epita if it exists
 
 ## Usage:
   
-    ./push [*tagname*]
+    ./push [tagname]
 
 ## Config:
 Needs a git repo.
@@ -14,7 +14,7 @@ Needs a Makefile.
 Optional: a remote named epita on wich it will push the same things.
 
 ## What next ? *TODO*
-    ./push [-r *remote name*]  [-t \<continue>=N]  [-m \<build>=makefile]  [*tagname*]
+    ./push [-r remote name]  [-t <continue>=N]  [-m <build>=makefile]  [tagname]
 
 -r: push also on the remote: *remote name*
 (note than it won't push automaticly on epita)
