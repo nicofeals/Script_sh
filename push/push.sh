@@ -8,7 +8,7 @@ function check_opt_r() {
 	fi
 }
 
-function chec_opt_tag() {
+function check_opt_tag() {
 	if [[ $opt_kind == "--tag" ]]; then
 		echo "Fail Usage: $Usage"
 		echo "$arg can not follow $opt_kind"
@@ -25,11 +25,12 @@ NORMAL="\033[0m"
 
 Usage="./push [-r remote_name][-t <continue>=N][--tag <tagname>][-h\--help]"
 
-opt_kind=""
+opt_kind="" 
 remote=""
 testsuit=""
 tag=""
 help=""
+force=0
 #help_msg="
 #	$Usage\n
  #    \n
@@ -47,6 +48,11 @@ for arg in $@; do
 		check_opt_r
 		check_opt_tag
 		help="$arg"
+
+	elif [[ $arg == "-f" ]]; then
+		check_opt_r
+		check_opt_tag
+		force=1
 
 	elif [[ $arg == "-r" && $remote == "" ]]; then
 		check_opt_r
@@ -79,9 +85,17 @@ for arg in $@; do
 		opt_kind=""
 
 	elif [[ $opt_kind == "--tag" ]]; then
-		tag="$arg"
-		opt_kind=""
-
+		if [[ ${arg:0:1} == "-" ]]; then
+			if [[ $arg == "-no-tag" ]]; then
+				tag="-no-arg"
+			else
+				echo "$arg is not a valid tag.">&2
+				exit 3
+			fi
+		else
+			tag="$arg"
+			opt_kind=""
+		fi
 	else
 		echo "Fail Usage: $Usage\n" >&2
 		echo "$arg is not an option or is allready set" >&2
@@ -122,7 +136,9 @@ make 2> .__tmp_push__/error
 if [[ `cat .__tmp_push__/error` != "" ]]; then
 	echo ""
 	echo "$RED$BOLD$BLINKING!\tMAKE FAILE\t!$NORMAL"
-	exit 1
+	if [[ $force -eq 0 ]]; then
+		exit 1
+	fi
 else
 	clear
 	resume="$GREEN$BOLD\tCompile OK$NORMAL"
