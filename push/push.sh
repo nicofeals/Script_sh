@@ -96,7 +96,7 @@ for arg in $@; do
 			tag="$arg"
 		fi
 		opt_kind=""
-		
+
 	else
 		echo "Fail Usage: $Usage\n" >&2
 		echo "$arg is not an option or is allready set" >&2
@@ -140,42 +140,42 @@ if [[ `cat .__tmp_push__/error` != "" ]]; then
 	if [[ $force -eq 0 ]]; then
 		exit 1
 	fi
-else
+fi
+clear
+resume="$GREEN$BOLD\tCompile OK$NORMAL"
+if [[ $testsuit != "" ]]; then
+	make check 2>.__tmp_push__/error
 	clear
-	resume="$GREEN$BOLD\tCompile OK$NORMAL"
-	if [[ $testsuit != "" ]]; then
-		make check 2>.__tmp_push__/error
-		clear
-		make check
-		if [[ `cat .__tmp_push__/error` != "" ]]; then
-			resume="$resume\n$RED$BOLD$BLINKING!\tMAKE CHECK FAIL \t!$NORMAL"
-			if [[ $testsuit == "N" ]]; then
-				echo "\n$resume"
-				exit 2
-			fi
-		else
-			resume="$resume\n$GREEN$BOLD\tmake check OK$NORMAL"
-			testsuit="OK"
-		fi	
-	fi
-	if [[ $testsuit == "OK" || $testsuit == "" || $testsuit == "Y" ]]; then
-		clear
-		echo "$resume"
-		git push
+	make check
+	if [[ `cat .__tmp_push__/error` != "" ]]; then
+		resume="$resume\n$RED$BOLD$BLINKING!\tMAKE CHECK FAIL \t!$NORMAL"
+		if [[ $testsuit == "N" ]]; then
+			echo "\n$resume"
+			exit 2
+		fi
+	else
+		resume="$resume\n$GREEN$BOLD\tmake check OK$NORMAL"
+		testsuit="OK"
+	fi	
+fi
+if [[ $testsuit == "OK" || $testsuit == "" || $testsuit == "Y" ]]; then
+	clear
+	echo "$resume"
+	git push
 
-		if [[ $tag == "" ]]; then
-			echo "\n$BOLD$UNDERLINE Tag$NORMAL: "
-			read tag
-		fi
-		if [[ $tag != "-no-tag" ]]; then
-			git tag "$tag"
-			git push --tags	
-		fi
-		if [[ $remote != "" ]]; then
-			git push "$remote"
-			git push "$remote" --tags	
-		fi
+	if [[ $tag == "" ]]; then
+		echo "\n$BOLD$UNDERLINE Tag$NORMAL: "
+		read tag
+	fi
+	if [[ $tag != "-no-tag" ]]; then
+		git tag "$tag"
+		git push --tags	
+	fi
+	if [[ $remote != "" ]]; then
+		git push "$remote"
+		git push "$remote" --tags	
 	fi
 fi
+
 rm -r .__tmp_push__
 exit 0
