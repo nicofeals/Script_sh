@@ -1,6 +1,6 @@
 #! /bin/sh
 
-function check_opt_r() {
+check_opt_r() {
 	if [[ $opt_kind == "-r" ]]; then
 		echo "Fail Usage: $Usage"
 		echo "$arg can not follow $opt_kind"
@@ -8,7 +8,7 @@ function check_opt_r() {
 	fi
 }
 
-function check_opt_tag() {
+check_opt_tag() {
 	if [[ $opt_kind == "--tag" ]]; then
 		echo "Fail Usage: $Usage"
 		echo "$arg can not follow $opt_kind"
@@ -136,8 +136,9 @@ make
 make 2> .__tmp_push__/error
 if [[ `cat .__tmp_push__/error` != "" ]]; then
 	echo ""
-	echo "$RED$BOLD$BLINKING!\tMAKE FAILE\t!$NORMAL"
+	resume="$RED$BOLD$BLINKING!\tMAKE FAILE\t!$NORMAL"
 	if [[ $force -eq 0 ]]; then
+		echo "$resume"
 		exit 1
 	fi
 	force=2
