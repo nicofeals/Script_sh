@@ -141,6 +141,7 @@ else
 		git tag "$tag"
 		git push --tags
 		if [[ $remote != "" ]]; then
+			git push "$remote"
 			git push "$remote" --tags	
 		fi
 	fi
