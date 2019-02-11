@@ -3,7 +3,15 @@
 function check_opt_r() {
 	if [[ $opt_kind == "-r" ]]; then
 		echo "Fail Usage: $Usage"
-		echo "$arg can follow $opt_kind"
+		echo "$arg can not follow $opt_kind"
+		exit 3
+	fi
+}
+
+function chec_opt_tag() {
+	if [[ $opt_kind == "--tag" ]]; then
+		echo "Fail Usage: $Usage"
+		echo "$arg can not follow $opt_kind"
 		exit 3
 	fi
 }
@@ -37,19 +45,23 @@ help=""
 for arg in $@; do
 	if [[ $arg == "-h" || $arg == "--help" ]]; then
 		check_opt_r
+		check_opt_tag
 		help="$arg"
 
 	elif [[ $arg == "-r" && $remote == "" ]]; then
 		check_opt_r
+		check_opt_tag
 		opt_kind="-r"
 
 	elif [[ $arg == "-t" && $testsuit == "" ]]; then
 		check_opt_r
+		check_opt_tag
 		opt_kind="-t"
 		testsuit="N"
 
 	elif [[ $arg == "--tag" && $tag == "" ]]; then
 		check_opt_r
+		check_opt_tag
 		opt_kind="--tag"
 
 	elif [[ $opt_kind == "-r" ]]; then
@@ -138,8 +150,10 @@ else
 			echo "\n$BOLD$UNDERLINE Tag$NORMAL: "
 			read tag
 		fi
-		git tag "$tag"
-		git push --tags
+		if [[ $tag != "-no-tag" ]]; then
+			git tag "$tag"
+			git push --tags	
+		fi
 		if [[ $remote != "" ]]; then
 			git push "$remote"
 			git push "$remote" --tags	
