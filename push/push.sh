@@ -94,8 +94,9 @@ for arg in $@; do
 			fi
 		else
 			tag="$arg"
-			opt_kind=""
 		fi
+		opt_kind=""
+		
 	else
 		echo "Fail Usage: $Usage\n" >&2
 		echo "$arg is not an option or is allready set" >&2
