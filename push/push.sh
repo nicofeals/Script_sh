@@ -140,9 +140,12 @@ if [[ `cat .__tmp_push__/error` != "" ]]; then
 	if [[ $force -eq 0 ]]; then
 		exit 1
 	fi
+	force=2
 fi
-clear
-resume="$GREEN$BOLD\tCompile OK$NORMAL"
+if [[ $force -ne 2 ]]; then
+	clear
+	resume="$GREEN$BOLD\tCompile OK$NORMAL"	
+fi
 if [[ $testsuit != "" ]]; then
 	make check 2>.__tmp_push__/error
 	clear
